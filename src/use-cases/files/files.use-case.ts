@@ -10,7 +10,7 @@ import {
 
 import { IFileRequest } from '@src/common/interfaces/file-request.interface';
 import fs from 'fs';
-import { getFileMimeType } from '@src/common/util/getFileMimeType.util';
+import { getFileType } from '@src/common/util/getFileType.util';
 import path from 'path';
 
 export const getFiles = async (options?: {
@@ -56,7 +56,7 @@ export const saveFile = async (
   userEmail: string,
   req?: IFileRequest
 ) => {
-  const fileType = getFileMimeType(file);
+  const fileType = getFileType(file);
   const mimeType = file.mimetype;
 
   let fileName;
@@ -132,7 +132,7 @@ export const updateFile = async (
   );
 
   if (newFileData) {
-    const fileType = getFileMimeType(newFileData);
+    const fileType = getFileType(newFileData);
     const mimeType = newFileData.mimetype;
     const extension = path.extname(newFileData.originalname);
 
