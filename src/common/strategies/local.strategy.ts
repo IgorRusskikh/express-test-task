@@ -15,8 +15,6 @@ const localStrategy = new LocalStrategy(
 async function verify(email: string, password: string, cb: any) {
   const existingUser = await getUserByEmail(email);
 
-  console.log('existingUser', existingUser);
-
   if (!existingUser) {
     return cb(null, false, { message: 'User not found' });
   }
