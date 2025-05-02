@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  email    String @id
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  RefreshToken RefreshToken[]
+  File         File[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  sessionId String   @unique
+  isActive  Boolean  @default(true)
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [email])
+
+  @@index([userId, sessionId, token])
+  @@map("refresh_tokens")
+}
+
+model File {
+  id        String   @id @default(uuid())
+  name      String
+  extension String
+  type      FileType
+  mimeType  String
+  size      Int
+  userEmail String
+  private   Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userEmail], references: [email])
+
+  @@unique([name, extension, mimeType])
+  @@index([userEmail, name, type])
+  @@map("files")
+}
+
+enum FileType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  OTHER
+}
